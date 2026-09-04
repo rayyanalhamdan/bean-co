@@ -1,0 +1,97 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Tahoma', 'Segoe UI', sans-serif;
+  color: #3b2a1e;
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.hero {
+  background: #6f4e37;
+  color: #fdf6ec;
+  text-align: center;
+  padding: 100px 0;
+}
+
+.hero h1 {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.hero p {
+  font-size: 18px;
+  margin-bottom: 32px;
+  opacity: 0.9;
+}
+
+.btn {
+  display: inline-block;
+  background: #fdf6ec;
+  color: #6f4e37;
+  padding: 12px 32px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: transform 0.2s;
+}
+
+.btn:hover {
+  transform: scale(1.05);
+}
+
+.section {
+  padding: 70px 0;
+  text-align: center;
+}
+
+.section.alt {
+  background: #fdf6ec;
+}
+
+.section h2 {
+  font-size: 32px;
+  margin-bottom: 24px;
+  color: #6f4e37;
+}
+
+.section p {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 24px;
+  margin-top: 32px;
+}
+
+.menu-item {
+  background: white;
+  border: 1px solid #e5d9c8;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.menu-item h3 {
+  color: #6f4e37;
+  margin-bottom: 8px;
+}
+
+footer {
+  background: #3b2a1e;
+  color: #fdf6ec;
+  text-align: center;
+  padding: 24px 0;
+  font-size: 14px;
+}
