@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bean & Co | قهوة مختصة</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -11,27 +13,30 @@
   <header class="hero">
     <div class="hero-overlay"></div>
     <div class="container hero-content">
-      <h1 class="fade-in-up">Bean & Co</h1>
-      <p class="fade-in-up delay-1">قهوة مختصة، محمّصة بعناية</p>
-      <a href="#menu" class="btn fade-in-up delay-2">شوف القائمة</a>
+      <p class="hero-eyebrow">محمصة يدوياً · الرياض</p>
+      <h1>حبة قهوة،<br>محمّصة بصبر</h1>
+      <p class="hero-sub">نختار حبوبنا من مزارع صغيرة، ونحمّصها على دفعات محدودة كل أسبوع.</p>
+      <a href="#menu" class="btn">شوف القائمة</a>
     </div>
   </header>
 
   <section id="about" class="section reveal">
     <div class="container about-grid">
-      <div class="about-text">
-        <h2>قصتنا</h2>
-        <p>Bean & Co بدأت من شغف بسيط بالقهوة المختصة. نحمّص حبوبنا بأنفسنا ونختار أفضل المصادر حول العالم عشان نقدم لك فنجان مميز بكل زيارة.</p>
-      </div>
       <div class="about-image">
-        <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600&q=80" alt="حبوب قهوة محمصة">
+        <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=700&q=80" alt="حبوب قهوة محمصة">
+      </div>
+      <div class="about-text">
+        <span class="section-label">قصتنا</span>
+        <h2>بدأنا بفنجان واحد</h2>
+        <p>Bean & Co بدأت من شغف بسيط بالقهوة المختصة. نحمّص حبوبنا بأنفسنا، دفعات صغيرة كل مرة، عشان نضمن كل فنجان يوصلك بأفضل حالة له. ما نستعجل بالتحميص، ولا نساوم على المصدر.</p>
       </div>
     </div>
   </section>
 
   <section id="gallery" class="section alt reveal">
     <div class="container">
-      <h2>من أجواء المكان</h2>
+      <span class="section-label">من الداخل</span>
+      <h2>أجواء المكان</h2>
       <div class="gallery-grid">
         <img class="gallery-img" src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=500&q=80" alt="أجواء الكافيه">
         <img class="gallery-img" src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=500&q=80" alt="فنجان قهوة">
@@ -42,63 +47,72 @@
 
   <section id="menu" class="section reveal">
     <div class="container">
-      <h2>القائمة</h2>
-      <div class="menu-grid">
-        <div class="menu-item">
-          <h3>إسبريسو</h3>
-          <p>15 ريال</p>
-        </div>
-        <div class="menu-item">
-          <h3>لاتيه</h3>
-          <p>20 ريال</p>
-        </div>
-        <div class="menu-item">
-          <h3>كولد برو</h3>
-          <p>22 ريال</p>
-        </div>
-        <div class="menu-item">
-          <h3>موكا</h3>
-          <p>23 ريال</p>
-        </div>
-      </div>
+      <span class="section-label">القائمة</span>
+      <h2>ماذا نقدّم</h2>
+      <ul class="menu-list">
+        <li class="menu-row">
+          <span class="menu-name">إسبريسو</span>
+          <span class="menu-dots"></span>
+          <span class="menu-price">15 ريال</span>
+        </li>
+        <li class="menu-row">
+          <span class="menu-name">لاتيه</span>
+          <span class="menu-dots"></span>
+          <span class="menu-price">20 ريال</span>
+        </li>
+        <li class="menu-row">
+          <span class="menu-name">كولد برو</span>
+          <span class="menu-dots"></span>
+          <span class="menu-price">22 ريال</span>
+        </li>
+        <li class="menu-row">
+          <span class="menu-name">موكا</span>
+          <span class="menu-dots"></span>
+          <span class="menu-price">23 ريال</span>
+        </li>
+      </ul>
     </div>
   </section>
 
   <section id="testimonials" class="section alt reveal">
     <div class="container">
-      <h2>آراء عملائنا</h2>
+      <span class="section-label">آراء عملائنا</span>
       <div class="testimonials-grid">
-        <div class="testimonial-card">
-          <p class="testimonial-text">"أفضل قهوة جربتها بالرياض، والطعم ثابت كل مرة."</p>
-          <p class="testimonial-name">— سارة الغامدي</p>
-        </div>
-        <div class="testimonial-card">
-          <p class="testimonial-text">"الأجواء حلوة والموظفين ودودين، أصبح مكاني المفضل للعمل."</p>
-          <p class="testimonial-name">— فهد العتيبي</p>
-        </div>
-        <div class="testimonial-card">
-          <p class="testimonial-text">"الكولد برو عندهم لا يقارن، أنصح فيه بشدة."</p>
-          <p class="testimonial-name">— نورة القحطاني</p>
-        </div>
+        <blockquote class="testimonial">
+          <p>أفضل قهوة جربتها بالرياض، والطعم ثابت كل مرة.</p>
+          <footer>— سارة الغامدي</footer>
+        </blockquote>
+        <blockquote class="testimonial">
+          <p>الأجواء حلوة والموظفين ودودين، أصبح مكاني المفضل للعمل.</p>
+          <footer>— فهد العتيبي</footer>
+        </blockquote>
+        <blockquote class="testimonial">
+          <p>الكولد برو عندهم لا يقارن، أنصح فيه بشدة.</p>
+          <footer>— نورة القحطاني</footer>
+        </blockquote>
       </div>
     </div>
   </section>
 
   <section id="contact" class="section reveal">
-    <div class="container">
-      <h2>تواصل معنا</h2>
-      <p>واتساب: 0500000000</p>
-      <p>انستقرام: @beanandco</p>
-      <p>الموقع: الرياض، حي العليا</p>
+    <div class="container contact-grid">
+      <div>
+        <span class="section-label">تواصل معنا</span>
+        <h2>زورونا</h2>
+      </div>
+      <div class="contact-details">
+        <p>واتساب: 0500000000</p>
+        <p>انستقرام: @beanandco</p>
+        <p>الموقع: الرياض، حي العليا</p>
+      </div>
     </div>
   </section>
 
-  <footer>
+  <footer class="site-footer">
     <p>© 2026 Bean & Co. جميع الحقوق محفوظة.</p>
   </footer>
 
   <script>
-    // ظهور تدريجي للأقسام عند التمرير
     const revealElements = document.querySelectorAll('.reveal');
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
