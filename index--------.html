@@ -9,38 +9,21 @@
 <body>
 
   <header class="hero">
-    <div class="hero-overlay"></div>
-    <div class="container hero-content">
-      <h1 class="fade-in-up">Bean & Co</h1>
-      <p class="fade-in-up delay-1">قهوة مختصة، محمّصة بعناية</p>
-      <a href="#menu" class="btn fade-in-up delay-2">شوف القائمة</a>
+    <div class="container">
+      <h1>Bean & Co</h1>
+      <p>قهوة مختصة، محمّصة بعناية</p>
+      <a href="#menu" class="btn">شوف القائمة</a>
     </div>
   </header>
 
-  <section id="about" class="section reveal">
-    <div class="container about-grid">
-      <div class="about-text">
-        <h2>قصتنا</h2>
-        <p>Bean & Co بدأت من شغف بسيط بالقهوة المختصة. نحمّص حبوبنا بأنفسنا ونختار أفضل المصادر حول العالم عشان نقدم لك فنجان مميز بكل زيارة.</p>
-      </div>
-      <div class="about-image">
-        <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600&q=80" alt="حبوب قهوة محمصة">
-      </div>
-    </div>
-  </section>
-
-  <section id="gallery" class="section alt reveal">
+  <section id="about" class="section">
     <div class="container">
-      <h2>من أجواء المكان</h2>
-      <div class="gallery-grid">
-        <img class="gallery-img" src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=500&q=80" alt="أجواء الكافيه">
-        <img class="gallery-img" src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=500&q=80" alt="فنجان قهوة">
-        <img class="gallery-img" src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=500&q=80" alt="تحضير القهوة">
-      </div>
+      <h2>قصتنا</h2>
+      <p>Bean & Co بدأت من شغف بسيط بالقهوة المختصة. نحمّص حبوبنا بأنفسنا ونختار أفضل المصادر حول العالم عشان نقدم لك فنجان مميز بكل زيارة.</p>
     </div>
   </section>
 
-  <section id="menu" class="section reveal">
+  <section id="menu" class="section alt">
     <div class="container">
       <h2>القائمة</h2>
       <div class="menu-grid">
@@ -64,7 +47,7 @@
     </div>
   </section>
 
-  <section id="testimonials" class="section alt reveal">
+  <section id="testimonials" class="section">
     <div class="container">
       <h2>آراء عملائنا</h2>
       <div class="testimonials-grid">
@@ -84,7 +67,7 @@
     </div>
   </section>
 
-  <section id="contact" class="section reveal">
+  <section id="contact" class="section alt">
     <div class="container">
       <h2>تواصل معنا</h2>
       <p>واتساب: 0500000000</p>
@@ -96,20 +79,6 @@
   <footer>
     <p>© 2026 Bean & Co. جميع الحقوق محفوظة.</p>
   </footer>
-
-  <script>
-    // ظهور تدريجي للأقسام عند التمرير
-    const revealElements = document.querySelectorAll('.reveal');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.15 });
-    revealElements.forEach(el => observer.observe(el));
-  </script>
 
 </body>
 </html>
