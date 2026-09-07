@@ -5,10 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bean & Co | قهوة مختصة</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400..700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+  <nav class="navbar">
+    <div class="container navbar-inner">
+      <a href="#" class="logo">
+        <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
+          <circle cx="15" cy="15" r="14" stroke="#c17f3e" stroke-width="1.5"/>
+          <path d="M15 8c-2 3-2 4 0 6s2 3 0 6" stroke="#c17f3e" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <span>Bean<span class="logo-accent">&</span>Co</span>
+      </a>
+      <a href="#contact" class="nav-cta">تواصل معنا</a>
+    </div>
+  </nav>
 
   <header class="hero">
     <div class="hero-overlay"></div>
@@ -42,7 +55,38 @@
     </div>
   </section>
 
-  <section id="gallery" class="section alt reveal">
+  <section id="journey" class="section alt reveal">
+    <div class="container">
+      <span class="section-label">رحلة الحبة</span>
+      <h2>من المزرعة إلى فنجانك</h2>
+      <div class="journey-wrap">
+        <div class="journey-tabs">
+          <button class="journey-tab active" data-step="1">
+            <span class="journey-num">01</span>
+            <span class="journey-title">الاختيار</span>
+          </button>
+          <button class="journey-tab" data-step="2">
+            <span class="journey-num">02</span>
+            <span class="journey-title">التحميص</span>
+          </button>
+          <button class="journey-tab" data-step="3">
+            <span class="journey-num">03</span>
+            <span class="journey-title">الطحن</span>
+          </button>
+          <button class="journey-tab" data-step="4">
+            <span class="journey-num">04</span>
+            <span class="journey-title">التقديم</span>
+          </button>
+        </div>
+        <div class="journey-panel">
+          <img id="journeyImg" src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=700&q=80" alt="رحلة الحبة">
+          <p id="journeyText">نختار حبوبنا من مزارع صغيرة موثوقة، ونفحص كل دفعة يدوياً قبل الموافقة عليها.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="gallery" class="section reveal">
     <div class="container">
       <span class="section-label">من الداخل</span>
       <h2>أجواء المكان</h2>
@@ -54,7 +98,7 @@
     </div>
   </section>
 
-  <section id="menu" class="section reveal">
+  <section id="menu" class="section alt reveal">
     <div class="container">
       <span class="section-label">القائمة</span>
       <h2>ماذا نقدّم</h2>
@@ -87,7 +131,7 @@
     </div>
   </section>
 
-  <section id="testimonials" class="section alt reveal">
+  <section id="testimonials" class="section reveal">
     <div class="testimonials-shape"></div>
     <div class="container">
       <span class="section-label">آراء عملائنا</span>
@@ -111,7 +155,7 @@
     </div>
   </section>
 
-  <section id="contact" class="section reveal">
+  <section id="contact" class="section alt reveal">
     <div class="container contact-grid">
       <div>
         <span class="section-label">تواصل معنا</span>
@@ -130,6 +174,31 @@
   </footer>
 
   <script>
+    const journeyData = {
+      1: { img: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=700&q=80', text: 'نختار حبوبنا من مزارع صغيرة موثوقة، ونفحص كل دفعة يدوياً قبل الموافقة عليها.' },
+      2: { img: 'https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=700&q=80', text: 'نحمّص كل دفعة بدرجة حرارة مضبوطة بدقة، عشان نطلع أفضل نكهة ممكنة من كل حبة.' },
+      3: { img: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=700&q=80', text: 'نطحن الحبوب طازجة لحظة الطلب، عشان تحصل على أقوى نكهة وأكثرها انتعاشاً.' },
+      4: { img: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=700&q=80', text: 'نقدّم لك الفنجان بعناية، بالضبط بالطريقة اللي تحبها.' }
+    };
+
+    const journeyTabs = document.querySelectorAll('.journey-tab');
+    const journeyImg = document.getElementById('journeyImg');
+    const journeyText = document.getElementById('journeyText');
+
+    journeyTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        journeyTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const step = journeyData[tab.dataset.step];
+        journeyImg.style.opacity = 0;
+        setTimeout(() => {
+          journeyImg.src = step.img;
+          journeyText.textContent = step.text;
+          journeyImg.style.opacity = 1;
+        }, 200);
+      });
+    });
+
     const revealElements = document.querySelectorAll('.reveal');
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {

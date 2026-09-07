@@ -11,19 +11,21 @@
   --paper: #fffdf9;
   --amber: #c17f3e;
   --line: #e4d7c4;
+  --font-display: 'Reem Kufi', sans-serif;
+  --font-body: 'IBM Plex Sans Arabic', sans-serif;
 }
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   color: var(--clay);
   line-height: 1.7;
   background: var(--paper);
 }
 
 h1, h2 {
-  font-family: 'Fraunces', serif;
+  font-family: var(--font-display);
   color: var(--espresso);
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .container {
@@ -37,6 +39,52 @@ h1, h2 {
   font-size: 14px;
   color: var(--amber);
   margin-bottom: 8px;
+}
+
+/* شريط التنقل — هوية العلامة */
+.navbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  padding: 22px 0;
+}
+
+.navbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-size: 20px;
+  color: var(--cream);
+  text-decoration: none;
+  letter-spacing: 0.3px;
+}
+
+.logo-accent {
+  color: var(--amber);
+}
+
+.nav-cta {
+  color: var(--cream);
+  text-decoration: none;
+  font-size: 14px;
+  border: 1px solid rgba(247,240,228,0.4);
+  padding: 8px 18px;
+  border-radius: 30px;
+  transition: border-color 0.25s ease, background 0.25s ease;
+}
+
+.nav-cta:hover {
+  border-color: var(--amber);
+  background: rgba(193,127,62,0.15);
 }
 
 /* Hero — اللحظة الوحيدة المميزة بالحركة */
@@ -193,6 +241,96 @@ h1, h2 {
   transform: translateY(0);
 }
 
+/* رحلة الحبة — العنصر التفاعلي */
+.journey-wrap {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 40px;
+  margin-top: 32px;
+  align-items: stretch;
+}
+
+.journey-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.journey-tab {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: none;
+  border: none;
+  border-right: 3px solid transparent;
+  padding: 16px 18px;
+  text-align: right;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: border-color 0.25s ease, background 0.25s ease;
+}
+
+.journey-tab:hover {
+  background: rgba(193,127,62,0.06);
+}
+
+.journey-tab.active {
+  border-right-color: var(--amber);
+  background: rgba(193,127,62,0.1);
+}
+
+.journey-num {
+  font-family: var(--font-display);
+  font-size: 14px;
+  color: var(--amber);
+}
+
+.journey-title {
+  font-size: 17px;
+  color: var(--espresso);
+  font-weight: 500;
+}
+
+.journey-panel {
+  background: var(--paper);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 12px 30px rgba(43,27,18,0.08);
+}
+
+.journey-panel img {
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+  display: block;
+  transition: opacity 0.3s ease;
+}
+
+.journey-panel p {
+  padding: 20px 24px;
+  font-size: 15px;
+  color: var(--clay);
+  line-height: 1.7;
+}
+
+@media (max-width: 700px) {
+  .journey-wrap {
+    grid-template-columns: 1fr;
+  }
+  .journey-tabs {
+    flex-direction: row;
+    overflow-x: auto;
+  }
+  .journey-tab {
+    border-right: none;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+  }
+  .journey-tab.active {
+    border-bottom-color: var(--amber);
+  }
+}
+
 /* قسم "قصتنا" */
 .about-grid {
   display: grid;
@@ -265,7 +403,7 @@ h1, h2 {
 }
 
 .menu-name {
-  font-family: 'Fraunces', serif;
+  font-family: var(--font-display);
   font-size: 19px;
   color: var(--espresso);
 }
@@ -301,8 +439,8 @@ h1, h2 {
 }
 
 .testimonial p {
-  font-family: 'Fraunces', serif;
-  font-size: 19px;
+  font-family: var(--font-display);
+  font-size: 18px;
   color: var(--espresso);
   line-height: 1.6;
   margin-bottom: 14px;
