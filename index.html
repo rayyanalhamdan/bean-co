@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -156,7 +157,53 @@
     </div>
   </section>
 
-  <section id="contact" class="section alt reveal">
+  <section id="user-reviews" class="section alt reveal">
+    <div class="container">
+      <span class="section-label">شاركنا رأيك</span>
+      <h2>آراء الزوار</h2>
+
+      <!-- منطقة تسجيل الدخول / التسجيل -->
+      <div id="authBox" class="auth-box">
+        <div id="authForms">
+          <div class="auth-tabs">
+            <button class="auth-tab active" data-form="login">تسجيل دخول</button>
+            <button class="auth-tab" data-form="signup">حساب جديد</button>
+          </div>
+          <form id="loginForm" class="auth-form">
+            <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" required>
+            <input type="password" id="loginPassword" placeholder="كلمة المرور" required>
+            <button type="submit" class="btn btn-small">دخول</button>
+            <p class="auth-msg" id="loginMsg"></p>
+          </form>
+          <form id="signupForm" class="auth-form" style="display:none;">
+            <input type="text" id="signupName" placeholder="اسمك" required>
+            <input type="email" id="signupEmail" placeholder="البريد الإلكتروني" required>
+            <input type="password" id="signupPassword" placeholder="كلمة مرور (6 أحرف فأكثر)" required>
+            <button type="submit" class="btn btn-small">إنشاء حساب</button>
+            <p class="auth-msg" id="signupMsg"></p>
+          </form>
+        </div>
+        <div id="userBox" style="display:none;">
+          <p>مرحباً، <span id="userName"></span> 👋</p>
+          <button id="logoutBtn" class="nav-cta">تسجيل خروج</button>
+        </div>
+      </div>
+
+      <!-- نموذج كتابة رأي — يظهر بس لمن سجل دخول -->
+      <form id="reviewForm" class="review-form" style="display:none;">
+        <textarea id="reviewText" placeholder="شاركنا تجربتك مع Bean & Co..." required></textarea>
+        <button type="submit" class="btn btn-small">نشر الرأي</button>
+        <p class="auth-msg" id="reviewMsg"></p>
+      </form>
+
+      <!-- قائمة آراء الزوار المخزنة -->
+      <div id="userReviewsList" class="testimonials-grid" style="margin-top:32px;">
+        <p id="reviewsLoading" style="color:var(--clay);">جاري تحميل الآراء...</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="section reveal">
     <div class="container contact-grid">
       <div>
         <span class="section-label">تواصل معنا</span>
@@ -175,6 +222,139 @@
   </footer>
 
   <script>
+  <script>
+    // ==== إعداد Supabase ====
+    const SUPABASE_URL = 'https://jzpqmbekhdenaylypzaw.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_rE4aJdjJF8fhQutLBLFaBQ_6KHPWuTF';
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const authTabs = document.querySelectorAll('.auth-tab');
+    const loginForm = document.getElementById('loginForm');
+    const signupForm = document.getElementById('signupForm');
+    const authForms = document.getElementById('authForms');
+    const userBox = document.getElementById('userBox');
+    const userNameSpan = document.getElementById('userName');
+    const reviewForm = document.getElementById('reviewForm');
+
+    authTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        authTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        if (tab.dataset.form === 'login') {
+          loginForm.style.display = 'flex';
+          signupForm.style.display = 'none';
+        } else {
+          loginForm.style.display = 'none';
+          signupForm.style.display = 'flex';
+        }
+      });
+    });
+
+    // تسجيل جديد
+    signupForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('signupName').value;
+      const email = document.getElementById('signupEmail').value;
+      const password = document.getElementById('signupPassword').value;
+      const msg = document.getElementById('signupMsg');
+      msg.textContent = 'جاري إنشاء الحساب...';
+
+      const { data, error } = await supabaseClient.auth.signUp({
+        email, password,
+        options: { data: { name: name } }
+      });
+
+      if (error) {
+        msg.textContent = 'خطأ: ' + error.message;
+      } else {
+        msg.textContent = 'تم! تحققي من إيميلك لتأكيد الحساب.';
+      }
+    });
+
+    // تسجيل دخول
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      const msg = document.getElementById('loginMsg');
+      msg.textContent = 'جاري الدخول...';
+
+      const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+      if (error) {
+        msg.textContent = 'خطأ: ' + error.message;
+      } else {
+        msg.textContent = '';
+      }
+    });
+
+    // تسجيل خروج
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await supabaseClient.auth.signOut();
+    });
+
+    // مراقبة حالة تسجيل الدخول وتحديث الواجهة
+    supabaseClient.auth.onAuthStateChange((event, session) => {
+      if (session && session.user) {
+        authForms.style.display = 'none';
+        userBox.style.display = 'block';
+        reviewForm.style.display = 'flex';
+        userNameSpan.textContent = session.user.user_metadata.name || session.user.email;
+      } else {
+        authForms.style.display = 'block';
+        userBox.style.display = 'none';
+        reviewForm.style.display = 'none';
+      }
+    });
+
+    // نشر رأي جديد
+    reviewForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const text = document.getElementById('reviewText').value;
+      const msg = document.getElementById('reviewMsg');
+      const { data: { user } } = await supabaseClient.auth.getUser();
+
+      if (!user) return;
+
+      const { error } = await supabaseClient.from('reviews').insert({
+        user_id: user.id,
+        name: user.user_metadata.name || user.email,
+        review_text: text
+      });
+
+      if (error) {
+        msg.textContent = 'صار خطأ، حاولي مرة ثانية.';
+      } else {
+        msg.textContent = 'نُشر رأيك، شكراً لك!';
+        document.getElementById('reviewText').value = '';
+        loadReviews();
+      }
+    });
+
+    // تحميل وعرض الآراء المخزنة
+    async function loadReviews() {
+      const list = document.getElementById('userReviewsList');
+      const { data, error } = await supabaseClient
+        .from('reviews')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error || !data || data.length === 0) {
+        list.innerHTML = '<p style="color:var(--clay);">كوني أول من يشارك رأيه!</p>';
+        return;
+      }
+
+      list.innerHTML = data.map(r => `
+        <blockquote class="testimonial">
+          <svg class="quote-icon" width="28" height="20" viewBox="0 0 28 20" fill="none"><path d="M0 20V11.5C0 5.15 4.2 1 10.5 0l1 3C7.5 4 5.5 6.5 5.5 9.5H10V20H0zM15 20V11.5C15 5.15 19.2 1 25.5 0l1 3C22.5 4 20.5 6.5 20.5 9.5H25V20H15z" fill="#c17f3e" opacity="0.35"/></svg>
+          <p>${r.review_text}</p>
+          <footer>— ${r.name}</footer>
+        </blockquote>
+      `).join('');
+    }
+
+    loadReviews();
+
     const journeyData = {
       1: { img: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=700&q=80', text: 'نختار حبوبنا من مزارع صغيرة موثوقة، ونفحص كل دفعة يدوياً قبل الموافقة عليها.' },
       2: { img: 'https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=700&q=80', text: 'نحمّص كل دفعة بدرجة حرارة مضبوطة بدقة، عشان نطلع أفضل نكهة ممكنة من كل حبة.' },
