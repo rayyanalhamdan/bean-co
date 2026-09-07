@@ -173,40 +173,17 @@
   <section id="testimonials" class="section reveal">
     <div class="testimonials-shape"></div>
     <div class="container">
-      <span class="section-label">آراء عملائنا</span>
-      <div class="testimonials-grid">
-        <blockquote class="testimonial">
-          <svg class="quote-icon" width="28" height="20" viewBox="0 0 28 20" fill="none"><path d="M0 20V11.5C0 5.15 4.2 1 10.5 0l1 3C7.5 4 5.5 6.5 5.5 9.5H10V20H0zM15 20V11.5C15 5.15 19.2 1 25.5 0l1 3C22.5 4 20.5 6.5 20.5 9.5H25V20H15z" fill="#c17f3e" opacity="0.35"/></svg>
-          <p>أفضل قهوة جربتها بالرياض، والطعم ثابت كل مرة.</p>
-          <footer>— سارة الغامدي</footer>
-        </blockquote>
-        <blockquote class="testimonial">
-          <svg class="quote-icon" width="28" height="20" viewBox="0 0 28 20" fill="none"><path d="M0 20V11.5C0 5.15 4.2 1 10.5 0l1 3C7.5 4 5.5 6.5 5.5 9.5H10V20H0zM15 20V11.5C15 5.15 19.2 1 25.5 0l1 3C22.5 4 20.5 6.5 20.5 9.5H25V20H15z" fill="#c17f3e" opacity="0.35"/></svg>
-          <p>الأجواء حلوة والموظفين ودودين، أصبح مكاني المفضل للعمل.</p>
-          <footer>— فهد العتيبي</footer>
-        </blockquote>
-        <blockquote class="testimonial">
-          <svg class="quote-icon" width="28" height="20" viewBox="0 0 28 20" fill="none"><path d="M0 20V11.5C0 5.15 4.2 1 10.5 0l1 3C7.5 4 5.5 6.5 5.5 9.5H10V20H0zM15 20V11.5C15 5.15 19.2 1 25.5 0l1 3C22.5 4 20.5 6.5 20.5 9.5H25V20H15z" fill="#c17f3e" opacity="0.35"/></svg>
-          <p>الكولد برو عندهم لا يقارن، أنصح فيه بشدة.</p>
-          <footer>— نورة القحطاني</footer>
-        </blockquote>
-      </div>
-    </div>
-  </section>
-
-  <section id="user-reviews" class="section alt reveal">
-    <div class="container">
       <span class="section-label">شاركنا رأيك</span>
-      <h2>آراء الزوار</h2>
+      <h2>آراء عملائنا</h2>
 
       <!-- رسالة توجيه لمن ما سجل دخول -->
       <p id="loginPrompt" class="review-prompt">
-        <button id="openAuthModalInline" class="link-btn">سجّلي دخول</button> عشان تشاركينا رأيك 👋
+        <button id="openAuthModalInline" class="link-btn">سجّلي دخول</button> عشان تشاركينا رأيك
       </p>
 
       <!-- ترحيب بالمستخدم المسجّل -->
       <p id="reviewGreeting" class="review-prompt" style="display:none;">
-        أهلاً <span id="reviewUserName"></span>، شاركينا تجربتك 👇
+        أهلاً <span id="reviewUserName"></span>، شاركينا تجربتك
       </p>
 
       <!-- نموذج كتابة رأي — يظهر بس لمن سجل دخول -->
@@ -216,14 +193,14 @@
         <p class="auth-msg" id="reviewMsg"></p>
       </form>
 
-      <!-- قائمة آراء الزوار المخزنة -->
+      <!-- قائمة الآراء الحقيقية المخزنة بقاعدة البيانات -->
       <div id="userReviewsList" class="testimonials-grid" style="margin-top:32px;">
         <p id="reviewsLoading" style="color:var(--clay);">جاري تحميل الآراء...</p>
       </div>
     </div>
   </section>
 
-  <section id="contact" class="section reveal">
+  <section id="contact" class="section alt reveal">
     <div class="container contact-grid">
       <div>
         <span class="section-label">تواصل معنا</span>
