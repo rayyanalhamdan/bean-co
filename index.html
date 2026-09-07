@@ -192,8 +192,29 @@
 
   <!-- صندوق عربة الطلب العائم -->
   <div id="cartBar" class="cart-bar">
-    <span id="cartSummary">0 أصناف — 0 ريال</span>
+    <button id="cartOpenBtn" class="cart-open-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 4h2l2.4 12.4a2 2 0 0 0 2 1.6h7.2a2 2 0 0 0 2-1.6L21 8H6" stroke="#f7f0e4" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="20" r="1.4" fill="#f7f0e4"/><circle cx="17" cy="20" r="1.4" fill="#f7f0e4"/></svg>
+      <span id="cartSummary">0 أصناف — 0 ريال</span>
+    </button>
     <button id="cartClearBtn" class="link-btn">تفريغ</button>
+  </div>
+
+  <!-- لوحة تفاصيل العربة -->
+  <div id="cartDrawerOverlay" class="modal-overlay">
+    <div class="cart-drawer">
+      <div class="cart-drawer-header">
+        <h3>طلبك</h3>
+        <button id="closeCartDrawer" class="modal-close">&times;</button>
+      </div>
+      <div id="cartItemsList" class="cart-items-list"></div>
+      <div class="cart-drawer-footer">
+        <div class="cart-total-row">
+          <span>المجموع</span>
+          <span id="cartTotalValue">0 ريال</span>
+        </div>
+        <button class="btn btn-small" style="width:100%; justify-content:center;">تأكيد الطلب</button>
+      </div>
+    </div>
   </div>
 
   <section id="testimonials" class="section reveal">
@@ -412,10 +433,43 @@
 
     // ==== المرحلة 1: عربة الطلب (تحسب المجموع فقط) ====
     const cartBar = document.getElementById('cartBar');
+    const cartOpenBtn = document.getElementById('cartOpenBtn');
     const cartSummary = document.getElementById('cartSummary');
     const cartClearBtn = document.getElementById('cartClearBtn');
     const menuRows = document.querySelectorAll('.menu-row');
     const cart = {}; // { "اسم المنتج": {qty, price} }
+
+    // عناصر لوحة تفاصيل العربة
+    const cartDrawerOverlay = document.getElementById('cartDrawerOverlay');
+    const closeCartDrawer = document.getElementById('closeCartDrawer');
+    const cartItemsList = document.getElementById('cartItemsList');
+    const cartTotalValue = document.getElementById('cartTotalValue');
+
+    function renderCartDrawer() {
+      const items = Object.entries(cart).filter(([_, item]) => item.qty > 0);
+
+      if (items.length === 0) {
+        cartItemsList.innerHTML = '<p style="color:var(--clay); padding: 20px 0;">عربتك فاضية.</p>';
+        cartTotalValue.textContent = '0 ريال';
+        return;
+      }
+
+      let total = 0;
+      cartItemsList.innerHTML = items.map(([name, item]) => {
+        total += item.qty * item.price;
+        return `
+          <div class="cart-item-row">
+            <div class="cart-item-info">
+              <span class="cart-item-name">${name}</span>
+              <span class="cart-item-price">${item.price} ريال × ${item.qty}</span>
+            </div>
+            <span class="cart-item-subtotal">${item.qty * item.price} ريال</span>
+          </div>
+        `;
+      }).join('');
+
+      cartTotalValue.textContent = total + ' ريال';
+    }
 
     function updateCartBar() {
       let totalItems = 0;
@@ -430,8 +484,23 @@
         cartBar.classList.add('visible');
       } else {
         cartBar.classList.remove('visible');
+        cartDrawerOverlay.classList.remove('open');
       }
+
+      renderCartDrawer();
     }
+
+    cartOpenBtn.addEventListener('click', () => {
+      cartDrawerOverlay.classList.add('open');
+    });
+
+    closeCartDrawer.addEventListener('click', () => {
+      cartDrawerOverlay.classList.remove('open');
+    });
+
+    cartDrawerOverlay.addEventListener('click', (e) => {
+      if (e.target === cartDrawerOverlay) cartDrawerOverlay.classList.remove('open');
+    });
 
     menuRows.forEach(row => {
       const name = row.dataset.name;
