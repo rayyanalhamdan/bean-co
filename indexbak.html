@@ -7,7 +7,7 @@
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Cpath d='M30 4C13 4 2 17 2 32C2 47 13 60 30 60C47 60 58 47 58 32C58 17 47 4 30 4Z' fill='%232b1b12'/%3E%3Cpath d='M30 10C30 10 22 20 30 32C38 44 30 54 30 54' stroke='%23c17f3e' stroke-width='4' stroke-linecap='round' fill='none'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=2">
+  <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -23,12 +23,7 @@
       </a>
       <div class="navbar-actions">
         <div id="navLoggedOut">
-          <button id="openAuthModal" class="nav-icon-btn" aria-label="تسجيل دخول">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="8" r="4" stroke="#f7f0e4" stroke-width="1.6"/>
-              <path d="M4 20c0-3.5 3.5-6 8-6s8 2.5 8 6" stroke="#f7f0e4" stroke-width="1.6" stroke-linecap="round"/>
-            </svg>
-          </button>
+          <button id="openAuthModal" class="nav-cta">تسجيل دخول</button>
         </div>
         <div id="navLoggedIn" style="display:none;">
           <span id="navUserName" class="nav-greeting"></span>
