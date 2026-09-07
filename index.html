@@ -130,9 +130,9 @@
       <span class="section-label">من الداخل</span>
       <h2>أجواء المكان</h2>
       <div class="gallery-grid">
-        <img class="gallery-img tall" src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=500&q=80" alt="أجواء الكافيه">
-        <img class="gallery-img short" src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=500&q=80" alt="فنجان قهوة">
-        <img class="gallery-img short" src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=500&q=80" alt="تحضير القهوة">
+        <img class="gallery-img tall" src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=900&q=80" alt="أجواء الكافيه" data-detail-title="أجواء المكان" data-detail-text="مساحة دافئة مصممة عشان تشجعك تقعد وتاخذ وقتك، سواء جاي تشتغل أو تلتقي أصدقاء.">
+        <img class="gallery-img short" src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=900&q=80" alt="فنجان قهوة" data-detail-title="فنجان يستاهل الانتظار" data-detail-text="كل فنجان يُحضّر لحظة الطلب، بعناية بالتفاصيل من أول قطرة لين آخرها.">
+        <img class="gallery-img short" src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=900&q=80" alt="تحضير القهوة" data-detail-title="تحضير بعناية" data-detail-text="باريستا مدربين يتابعون كل خطوة بدقة، عشان تحصل على نفس الجودة في كل زيارة.">
       </div>
     </div>
   </section>
@@ -142,7 +142,7 @@
       <span class="section-label">القائمة</span>
       <h2>ماذا نقدّم</h2>
       <ul class="menu-list">
-        <li class="menu-row" data-name="إسبريسو" data-price="15">
+        <li class="menu-row" data-name="إسبريسو" data-price="15" data-detail-text="جرعة مركزة من قهوتنا المحمصة طازج، بطبقة كريما ذهبية وطعم غني بدون مرارة زايدة.">
           <svg class="menu-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 8h13l-1 9a3 3 0 0 1-3 2.5H8A3 3 0 0 1 5 17L4 8z" stroke="#c17f3e" stroke-width="1.6"/><path d="M17 9h2a2.5 2.5 0 0 1 0 5h-1.4" stroke="#c17f3e" stroke-width="1.6"/></svg>
           <span class="menu-name">إسبريسو</span>
           <span class="menu-dots"></span>
@@ -153,7 +153,7 @@
             <button class="qty-btn plus">+</button>
           </div>
         </li>
-        <li class="menu-row" data-name="لاتيه" data-price="20">
+        <li class="menu-row" data-name="لاتيه" data-price="20" data-detail-text="إسبريسو مع حليب مبخّر ناعم، توازن مثالي بين قوة القهوة ونعومة الحليب.">
           <svg class="menu-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 8h13l-1 9a3 3 0 0 1-3 2.5H8A3 3 0 0 1 5 17L4 8z" stroke="#c17f3e" stroke-width="1.6"/><path d="M17 9h2a2.5 2.5 0 0 1 0 5h-1.4" stroke="#c17f3e" stroke-width="1.6"/></svg>
           <span class="menu-name">لاتيه</span>
           <span class="menu-dots"></span>
@@ -164,7 +164,7 @@
             <button class="qty-btn plus">+</button>
           </div>
         </li>
-        <li class="menu-row" data-name="كولد برو" data-price="22">
+        <li class="menu-row" data-name="كولد برو" data-price="22" data-detail-text="قهوة منقوعة بالبارد لمدة 18 ساعة، طعم ناعم وحلاوة طبيعية بدون حموضة زايدة.">
           <svg class="menu-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M6 3v7a5 5 0 0 0 10 0V3" stroke="#c17f3e" stroke-width="1.6"/><path d="M4 20h14" stroke="#c17f3e" stroke-width="1.6" stroke-linecap="round"/></svg>
           <span class="menu-name">كولد برو</span>
           <span class="menu-dots"></span>
@@ -175,7 +175,7 @@
             <button class="qty-btn plus">+</button>
           </div>
         </li>
-        <li class="menu-row" data-name="موكا" data-price="23">
+        <li class="menu-row" data-name="موكا" data-price="23" data-detail-text="مزيج غني من الإسبريسو والشوكولاتة الفاخرة، مغطى بطبقة كريمة ناعمة.">
           <svg class="menu-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 8h13l-1 9a3 3 0 0 1-3 2.5H8A3 3 0 0 1 5 17L4 8z" stroke="#c17f3e" stroke-width="1.6"/><path d="M17 9h2a2.5 2.5 0 0 1 0 5h-1.4" stroke="#c17f3e" stroke-width="1.6"/></svg>
           <span class="menu-name">موكا</span>
           <span class="menu-dots"></span>
@@ -213,6 +213,18 @@
           <span id="cartTotalValue">0 ريال</span>
         </div>
         <button class="btn btn-small" style="width:100%; justify-content:center;">تأكيد الطلب</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- نافذة التفاصيل العامة (للصور والمنتجات) -->
+  <div id="detailModalOverlay" class="modal-overlay">
+    <div class="detail-modal">
+      <button id="closeDetailModal" class="modal-close">&times;</button>
+      <img id="detailModalImg" class="detail-modal-img" src="" alt="" style="display:none;">
+      <div class="detail-modal-body">
+        <h3 id="detailModalTitle"></h3>
+        <p id="detailModalText"></p>
       </div>
     </div>
   </div>
@@ -522,12 +534,64 @@
         qtySpan.textContent = cart[name].qty;
         updateCartBar();
       });
+
+      // فتح نافذة التفاصيل عند الضغط على اسم أو أيقونة المنتج (بدون التأثير على أزرار الكمية)
+      const nameEl = row.querySelector('.menu-name');
+      const iconEl = row.querySelector('.menu-icon');
+      [nameEl, iconEl].forEach(el => {
+        el.style.cursor = 'pointer';
+        el.addEventListener('click', () => {
+          openDetailModal({
+            title: name,
+            text: row.dataset.detailText,
+            image: null
+          });
+        });
+      });
     });
 
     cartClearBtn.addEventListener('click', () => {
       Object.keys(cart).forEach(name => cart[name].qty = 0);
       document.querySelectorAll('.qty-value').forEach(el => el.textContent = '0');
       updateCartBar();
+    });
+
+    // ==== نافذة التفاصيل العامة (صور المعرض + منتجات القائمة) ====
+    const detailModalOverlay = document.getElementById('detailModalOverlay');
+    const closeDetailModal = document.getElementById('closeDetailModal');
+    const detailModalImg = document.getElementById('detailModalImg');
+    const detailModalTitle = document.getElementById('detailModalTitle');
+    const detailModalText = document.getElementById('detailModalText');
+
+    function openDetailModal({ title, text, image }) {
+      detailModalTitle.textContent = title;
+      detailModalText.textContent = text;
+      if (image) {
+        detailModalImg.src = image;
+        detailModalImg.style.display = 'block';
+      } else {
+        detailModalImg.style.display = 'none';
+      }
+      detailModalOverlay.classList.add('open');
+    }
+
+    closeDetailModal.addEventListener('click', () => {
+      detailModalOverlay.classList.remove('open');
+    });
+
+    detailModalOverlay.addEventListener('click', (e) => {
+      if (e.target === detailModalOverlay) detailModalOverlay.classList.remove('open');
+    });
+
+    document.querySelectorAll('.gallery-img').forEach(img => {
+      img.style.cursor = 'pointer';
+      img.addEventListener('click', () => {
+        openDetailModal({
+          title: img.dataset.detailTitle,
+          text: img.dataset.detailText,
+          image: img.src
+        });
+      });
     });
 
     const journeyData = {
