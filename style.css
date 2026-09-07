@@ -500,7 +500,7 @@ h1, h2 {
 .menu-list {
   list-style: none;
   margin-top: 32px;
-  max-width: 480px;
+  max-width: 560px;
 }
 
 .menu-row {
@@ -531,6 +531,77 @@ h1, h2 {
 .menu-price {
   font-size: 15px;
   color: var(--amber);
+  font-weight: 500;
+  min-width: 55px;
+  text-align: left;
+}
+
+/* أزرار الكمية بالقائمة */
+.qty-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-right: 12px;
+}
+
+.qty-btn {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--espresso);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.qty-btn:hover {
+  border-color: var(--amber);
+  background: rgba(193,127,62,0.1);
+}
+
+.qty-value {
+  min-width: 16px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--espresso);
+  font-weight: 600;
+}
+
+/* شريط العربة العائم */
+.cart-bar {
+  position: fixed;
+  bottom: -80px;
+  left: 0;
+  right: 0;
+  background: var(--espresso);
+  color: var(--cream);
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  z-index: 40;
+  transition: bottom 0.3s ease;
+  box-shadow: 0 -8px 25px rgba(0,0,0,0.2);
+}
+
+.cart-bar.visible {
+  bottom: 0;
+}
+
+.cart-bar .link-btn {
+  color: var(--cream);
+  text-decoration: underline;
+}
+
+#cartSummary {
+  font-size: 15px;
   font-weight: 500;
 }
 
