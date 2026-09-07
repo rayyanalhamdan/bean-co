@@ -21,9 +21,41 @@
         </svg>
         <span>Bean<span class="logo-accent">&</span>Co</span>
       </a>
-      <a href="#contact" class="nav-cta">تواصل معنا</a>
+      <div class="navbar-actions">
+        <div id="navLoggedOut">
+          <button id="openAuthModal" class="nav-cta">تسجيل دخول</button>
+        </div>
+        <div id="navLoggedIn" style="display:none;">
+          <span id="navUserName" class="nav-greeting"></span>
+          <button id="logoutBtn" class="nav-cta">خروج</button>
+        </div>
+      </div>
     </div>
   </nav>
+
+  <!-- نافذة تسجيل الدخول / التسجيل -->
+  <div id="authModalOverlay" class="modal-overlay">
+    <div class="modal-box">
+      <button id="closeAuthModal" class="modal-close">&times;</button>
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-form="login">تسجيل دخول</button>
+        <button class="auth-tab" data-form="signup">حساب جديد</button>
+      </div>
+      <form id="loginForm" class="auth-form">
+        <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" required>
+        <input type="password" id="loginPassword" placeholder="كلمة المرور" required>
+        <button type="submit" class="btn btn-small">دخول</button>
+        <p class="auth-msg" id="loginMsg"></p>
+      </form>
+      <form id="signupForm" class="auth-form" style="display:none;">
+        <input type="text" id="signupName" placeholder="اسمك" required>
+        <input type="email" id="signupEmail" placeholder="البريد الإلكتروني" required>
+        <input type="password" id="signupPassword" placeholder="كلمة مرور (6 أحرف فأكثر)" required>
+        <button type="submit" class="btn btn-small">إنشاء حساب</button>
+        <p class="auth-msg" id="signupMsg"></p>
+      </form>
+    </div>
+  </div>
 
   <header class="hero">
     <div class="hero-overlay"></div>
@@ -162,32 +194,15 @@
       <span class="section-label">شاركنا رأيك</span>
       <h2>آراء الزوار</h2>
 
-      <!-- منطقة تسجيل الدخول / التسجيل -->
-      <div id="authBox" class="auth-box">
-        <div id="authForms">
-          <div class="auth-tabs">
-            <button class="auth-tab active" data-form="login">تسجيل دخول</button>
-            <button class="auth-tab" data-form="signup">حساب جديد</button>
-          </div>
-          <form id="loginForm" class="auth-form">
-            <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" required>
-            <input type="password" id="loginPassword" placeholder="كلمة المرور" required>
-            <button type="submit" class="btn btn-small">دخول</button>
-            <p class="auth-msg" id="loginMsg"></p>
-          </form>
-          <form id="signupForm" class="auth-form" style="display:none;">
-            <input type="text" id="signupName" placeholder="اسمك" required>
-            <input type="email" id="signupEmail" placeholder="البريد الإلكتروني" required>
-            <input type="password" id="signupPassword" placeholder="كلمة مرور (6 أحرف فأكثر)" required>
-            <button type="submit" class="btn btn-small">إنشاء حساب</button>
-            <p class="auth-msg" id="signupMsg"></p>
-          </form>
-        </div>
-        <div id="userBox" style="display:none;">
-          <p>مرحباً، <span id="userName"></span> 👋</p>
-          <button id="logoutBtn" class="nav-cta">تسجيل خروج</button>
-        </div>
-      </div>
+      <!-- رسالة توجيه لمن ما سجل دخول -->
+      <p id="loginPrompt" class="review-prompt">
+        <button id="openAuthModalInline" class="link-btn">سجّلي دخول</button> عشان تشاركينا رأيك 👋
+      </p>
+
+      <!-- ترحيب بالمستخدم المسجّل -->
+      <p id="reviewGreeting" class="review-prompt" style="display:none;">
+        أهلاً <span id="reviewUserName"></span>، شاركينا تجربتك 👇
+      </p>
 
       <!-- نموذج كتابة رأي — يظهر بس لمن سجل دخول -->
       <form id="reviewForm" class="review-form" style="display:none;">
@@ -230,10 +245,33 @@
     const authTabs = document.querySelectorAll('.auth-tab');
     const loginForm = document.getElementById('loginForm');
     const signupForm = document.getElementById('signupForm');
-    const authForms = document.getElementById('authForms');
-    const userBox = document.getElementById('userBox');
-    const userNameSpan = document.getElementById('userName');
     const reviewForm = document.getElementById('reviewForm');
+
+    // عناصر النافذة المنبثقة
+    const authModalOverlay = document.getElementById('authModalOverlay');
+    const openAuthModal = document.getElementById('openAuthModal');
+    const openAuthModalInline = document.getElementById('openAuthModalInline');
+    const closeAuthModal = document.getElementById('closeAuthModal');
+
+    function showAuthModal() { authModalOverlay.classList.add('open'); }
+    function hideAuthModal() { authModalOverlay.classList.remove('open'); }
+
+    openAuthModal.addEventListener('click', showAuthModal);
+    openAuthModalInline.addEventListener('click', showAuthModal);
+    closeAuthModal.addEventListener('click', hideAuthModal);
+    authModalOverlay.addEventListener('click', (e) => {
+      if (e.target === authModalOverlay) hideAuthModal();
+    });
+
+    // عناصر النافبار
+    const navLoggedOut = document.getElementById('navLoggedOut');
+    const navLoggedIn = document.getElementById('navLoggedIn');
+    const navUserName = document.getElementById('navUserName');
+
+    // عناصر قسم الآراء
+    const loginPrompt = document.getElementById('loginPrompt');
+    const reviewGreeting = document.getElementById('reviewGreeting');
+    const reviewUserName = document.getElementById('reviewUserName');
 
     authTabs.forEach(tab => {
       tab.addEventListener('click', () => {
@@ -284,6 +322,7 @@
         msg.textContent = 'خطأ: ' + error.message;
       } else {
         msg.textContent = '';
+        hideAuthModal();
       }
     });
 
@@ -292,16 +331,25 @@
       await supabaseClient.auth.signOut();
     });
 
-    // مراقبة حالة تسجيل الدخول وتحديث الواجهة
+    // مراقبة حالة تسجيل الدخول وتحديث الواجهة (النافبار + قسم الآراء)
     supabaseClient.auth.onAuthStateChange((event, session) => {
       if (session && session.user) {
-        authForms.style.display = 'none';
-        userBox.style.display = 'block';
+        const displayName = session.user.user_metadata.name || session.user.email;
+
+        navLoggedOut.style.display = 'none';
+        navLoggedIn.style.display = 'flex';
+        navUserName.textContent = displayName;
+
+        loginPrompt.style.display = 'none';
+        reviewGreeting.style.display = 'block';
+        reviewUserName.textContent = displayName;
         reviewForm.style.display = 'flex';
-        userNameSpan.textContent = session.user.user_metadata.name || session.user.email;
       } else {
-        authForms.style.display = 'block';
-        userBox.style.display = 'none';
+        navLoggedOut.style.display = 'block';
+        navLoggedIn.style.display = 'none';
+
+        loginPrompt.style.display = 'block';
+        reviewGreeting.style.display = 'none';
         reviewForm.style.display = 'none';
       }
     });
