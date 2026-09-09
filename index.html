@@ -290,6 +290,38 @@
     <p>© 2026 Bean & Co. جميع الحقوق محفوظة.</p>
   </footer>
 
+  <!-- زر الشات العائم -->
+  <button id="chatOpenBtn" class="chat-fab">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+      <path d="M4 12a8 8 0 1 1 3.2 6.4L4 20l1.2-3.4A8 8 0 0 1 4 12z" stroke="#fffdf9" stroke-width="1.8" stroke-linejoin="round"/>
+    </svg>
+  </button>
+
+  <!-- نافذة الشات -->
+  <div id="chatPanel" class="chat-panel">
+    <div class="chat-panel-header">
+      <span>تواصل معنا</span>
+      <button id="closeChatPanel" class="modal-close">&times;</button>
+    </div>
+
+    <!-- رسالة لمن ما سجل دخول -->
+    <div id="chatLoginPrompt" class="chat-login-prompt">
+      <p>سجّلي دخول عشان تتواصلين معنا مباشرة</p>
+      <button id="chatLoginBtn" class="btn btn-small">تسجيل دخول</button>
+    </div>
+
+    <!-- محتوى الشات (يظهر بعد تسجيل الدخول) -->
+    <div id="chatContent" style="display:none;">
+      <div id="chatMessages" class="chat-messages"></div>
+      <form id="chatForm" class="chat-input-row">
+        <input type="text" id="chatInput" placeholder="اكتبي رسالتك..." autocomplete="off" required>
+        <button type="submit" class="chat-send-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 12h16M14 6l6 6-6 6" stroke="#fffdf9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </form>
+    </div>
+  </div>
+
   <script>
     // ==== إعداد Supabase ====
     const SUPABASE_URL = 'https://jzpqmbekhdenaylypzaw.supabase.co';
@@ -385,9 +417,13 @@
       await supabaseClient.auth.signOut();
     });
 
-    // مراقبة حالة تسجيل الدخول وتحديث الواجهة (النافبار + قسم الآراء)
+    // مراقبة حالة تسجيل الدخول وتحديث الواجهة (النافبار + قسم الآراء + الشات)
+    let currentUser = null;
+    let messagesChannel = null;
+
     supabaseClient.auth.onAuthStateChange((event, session) => {
       if (session && session.user) {
+        currentUser = session.user;
         const displayName = session.user.user_metadata.name || session.user.email;
 
         navLoggedOut.style.display = 'none';
@@ -398,14 +434,105 @@
         reviewGreeting.style.display = 'block';
         reviewUserName.textContent = displayName;
         reviewForm.style.display = 'flex';
+
+        chatLoginPrompt.style.display = 'none';
+        chatContent.style.display = 'block';
+        loadChatMessages();
+        subscribeToChat();
       } else {
+        currentUser = null;
         navLoggedOut.style.display = 'block';
         navLoggedIn.style.display = 'none';
 
         loginPrompt.style.display = 'block';
         reviewGreeting.style.display = 'none';
         reviewForm.style.display = 'none';
+
+        chatLoginPrompt.style.display = 'block';
+        chatContent.style.display = 'none';
+        if (messagesChannel) supabaseClient.removeChannel(messagesChannel);
       }
+    });
+
+    // ==== الشات ====
+    const chatOpenBtn = document.getElementById('chatOpenBtn');
+    const chatPanel = document.getElementById('chatPanel');
+    const closeChatPanel = document.getElementById('closeChatPanel');
+    const chatLoginPrompt = document.getElementById('chatLoginPrompt');
+    const chatLoginBtn = document.getElementById('chatLoginBtn');
+    const chatContent = document.getElementById('chatContent');
+    const chatMessages = document.getElementById('chatMessages');
+    const chatForm = document.getElementById('chatForm');
+    const chatInput = document.getElementById('chatInput');
+
+    chatOpenBtn.addEventListener('click', () => {
+      chatPanel.classList.add('open');
+    });
+
+    closeChatPanel.addEventListener('click', () => {
+      chatPanel.classList.remove('open');
+    });
+
+    chatLoginBtn.addEventListener('click', () => {
+      chatPanel.classList.remove('open');
+      showAuthModal();
+    });
+
+    function renderMessage(msg) {
+      const isCustomer = msg.sender === 'customer';
+      const bubble = document.createElement('div');
+      bubble.className = 'chat-bubble ' + (isCustomer ? 'chat-bubble-mine' : 'chat-bubble-theirs');
+      bubble.textContent = msg.message_text;
+      chatMessages.appendChild(bubble);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    async function loadChatMessages() {
+      chatMessages.innerHTML = '';
+      const { data, error } = await supabaseClient
+        .from('messages')
+        .select('*')
+        .eq('user_id', currentUser.id)
+        .order('created_at', { ascending: true });
+
+      if (!error && data) {
+        if (data.length === 0) {
+          const welcome = document.createElement('p');
+          welcome.className = 'chat-empty';
+          welcome.textContent = 'ابدئي المحادثة، فريقنا يرد عليك بأقرب وقت 👋';
+          chatMessages.appendChild(welcome);
+        } else {
+          data.forEach(renderMessage);
+        }
+      }
+    }
+
+    function subscribeToChat() {
+      if (messagesChannel) supabaseClient.removeChannel(messagesChannel);
+      messagesChannel = supabaseClient
+        .channel('messages-' + currentUser.id)
+        .on('postgres_changes', {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'messages',
+          filter: 'user_id=eq.' + currentUser.id
+        }, (payload) => {
+          renderMessage(payload.new);
+        })
+        .subscribe();
+    }
+
+    chatForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const text = chatInput.value.trim();
+      if (!text || !currentUser) return;
+
+      chatInput.value = '';
+      await supabaseClient.from('messages').insert({
+        user_id: currentUser.id,
+        sender: 'customer',
+        message_text: text
+      });
     });
 
     // نشر رأي جديد
