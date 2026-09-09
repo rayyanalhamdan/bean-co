@@ -479,6 +479,10 @@
     });
 
     function renderMessage(msg) {
+      // احذفي رسالة الترحيب "ابدئي المحادثة" لو موجودة
+      const emptyMsg = chatMessages.querySelector('.chat-empty');
+      if (emptyMsg) emptyMsg.remove();
+
       const isCustomer = msg.sender === 'customer';
       const bubble = document.createElement('div');
       bubble.className = 'chat-bubble ' + (isCustomer ? 'chat-bubble-mine' : 'chat-bubble-theirs');
@@ -517,7 +521,10 @@
           table: 'messages',
           filter: 'user_id=eq.' + currentUser.id
         }, (payload) => {
-          renderMessage(payload.new);
+          // رسائل العميل نفسه تُعرض فوراً وقت الإرسال (بالأسفل)، هنا نعرض بس ردود صاحب المتجر
+          if (payload.new.sender !== 'customer') {
+            renderMessage(payload.new);
+          }
         })
         .subscribe();
     }
@@ -528,6 +535,10 @@
       if (!text || !currentUser) return;
 
       chatInput.value = '';
+
+      // نعرض الرسالة فوراً بدون ما ننتظر السيرفر (Optimistic UI)
+      renderMessage({ sender: 'customer', message_text: text });
+
       await supabaseClient.from('messages').insert({
         user_id: currentUser.id,
         sender: 'customer',
