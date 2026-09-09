@@ -420,6 +420,7 @@
     // مراقبة حالة تسجيل الدخول وتحديث الواجهة (النافبار + قسم الآراء + الشات)
     let currentUser = null;
     let messagesChannel = null;
+    let lastAuthUserId = null; // يمنع إعادة تحميل الشات لو تكرر نفس حدث تسجيل الدخول
 
     supabaseClient.auth.onAuthStateChange((event, session) => {
       if (session && session.user) {
@@ -437,10 +438,16 @@
 
         chatLoginPrompt.style.display = 'none';
         chatContent.style.display = 'block';
-        loadChatMessages();
-        subscribeToChat();
+
+        // نحمّل الشات مرة وحدة بس لكل مستخدم (نتجاهل تكرار نفس حدث تسجيل الدخول)
+        if (lastAuthUserId !== session.user.id) {
+          lastAuthUserId = session.user.id;
+          loadChatMessages();
+          subscribeToChat();
+        }
       } else {
         currentUser = null;
+        lastAuthUserId = null;
         navLoggedOut.style.display = 'block';
         navLoggedIn.style.display = 'none';
 
