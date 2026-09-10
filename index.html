@@ -62,7 +62,7 @@
       </div>
       <form id="loginForm" class="auth-form">
         <div class="role-toggle">
-          <button type="button" class="role-btn active" data-role="customer">دخول كزبون</button>
+          <button type="button" class="role-btn active" data-role="customer">دخول كمستخدم</button>
           <button type="button" class="role-btn" data-role="admin">دخول كمدير</button>
         </div>
         <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" required>
@@ -416,7 +416,7 @@
     });
 
     // تسجيل دخول
-    // اختيار الدخول كزبون أو كمدير
+    // اختيار الدخول كمستخدم أو كمدير
     let selectedRole = 'customer';
     const roleBtns = document.querySelectorAll('.role-btn');
     roleBtns.forEach(btn => {
@@ -884,7 +884,7 @@
 
       adminThreadsList.innerHTML = threads.map(t => `
         <div class="admin-thread-item" data-user-id="${t.user_id}">
-          <span class="admin-thread-id">زبون #${t.user_id.slice(0, 8)}</span>
+          <span class="admin-thread-id">مستخدم #${t.user_id.slice(0, 8)}</span>
           <span class="admin-thread-preview">${t.message_text}</span>
         </div>
       `).join('');
