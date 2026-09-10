@@ -45,6 +45,7 @@
         </div>
         <div id="navLoggedIn" style="display:none;">
           <span id="navUserName" class="nav-greeting"></span>
+          <button id="openAdminPanelBtn" class="nav-cta" style="display:none;">لوحة الإدارة</button>
           <button id="logoutBtn" class="nav-cta">خروج</button>
         </div>
       </div>
@@ -60,6 +61,10 @@
         <button class="auth-tab" data-form="signup">حساب جديد</button>
       </div>
       <form id="loginForm" class="auth-form">
+        <div class="role-toggle">
+          <button type="button" class="role-btn active" data-role="customer">دخول كزبون</button>
+          <button type="button" class="role-btn" data-role="admin">دخول كمدير</button>
+        </div>
         <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" required>
         <input type="password" id="loginPassword" placeholder="كلمة المرور" required>
         <button type="submit" class="btn btn-small">دخول</button>
@@ -72,6 +77,22 @@
         <button type="submit" class="btn btn-small">إنشاء حساب</button>
         <p class="auth-msg" id="signupMsg"></p>
       </form>
+    </div>
+  </div>
+
+  <!-- لوحة إدارة المحادثات (تظهر بس للمدير) -->
+  <div id="adminPanelOverlay" class="modal-overlay">
+    <div class="admin-panel">
+      <div class="admin-panel-header">
+        <h3>لوحة الإدارة — المحادثات</h3>
+        <button id="closeAdminPanel" class="modal-close">&times;</button>
+      </div>
+      <div class="admin-panel-body">
+        <div id="adminThreadsList" class="admin-threads-list"></div>
+        <div id="adminThreadView" class="admin-thread-view">
+          <p class="admin-empty-hint">اختاري محادثة من القائمة</p>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -395,6 +416,20 @@
     });
 
     // تسجيل دخول
+    // اختيار الدخول كزبون أو كمدير
+    let selectedRole = 'customer';
+    const roleBtns = document.querySelectorAll('.role-btn');
+    roleBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        roleBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedRole = btn.dataset.role;
+      });
+    });
+
+    let isAdmin = false;
+    const openAdminPanelBtn = document.getElementById('openAdminPanelBtn');
+
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const email = document.getElementById('loginEmail').value;
@@ -406,10 +441,31 @@
 
       if (error) {
         msg.textContent = 'خطأ: ' + error.message;
-      } else {
-        msg.textContent = '';
-        hideAuthModal();
+        return;
       }
+
+      // لو اختارت "دخول كمدير"، نتأكد إن الإيميل فعلاً موجود بجدول admins
+      if (selectedRole === 'admin') {
+        const { data: adminRow } = await supabaseClient
+          .from('admins')
+          .select('email')
+          .eq('email', email)
+          .maybeSingle();
+
+        if (!adminRow) {
+          msg.textContent = 'هذا الحساب ما له صلاحية مدير.';
+          await supabaseClient.auth.signOut();
+          return;
+        }
+        isAdmin = true;
+        openAdminPanelBtn.style.display = 'inline-block';
+      } else {
+        isAdmin = false;
+        openAdminPanelBtn.style.display = 'none';
+      }
+
+      msg.textContent = '';
+      hideAuthModal();
     });
 
     // تسجيل خروج
@@ -448,6 +504,9 @@
       } else {
         currentUser = null;
         lastAuthUserId = null;
+        isAdmin = false;
+        openAdminPanelBtn.style.display = 'none';
+        adminPanelOverlay.classList.remove('open');
         navLoggedOut.style.display = 'block';
         navLoggedIn.style.display = 'none';
 
@@ -458,6 +517,7 @@
         chatLoginPrompt.style.display = 'block';
         chatContent.style.display = 'none';
         if (messagesChannel) supabaseClient.removeChannel(messagesChannel);
+        if (adminChannel) supabaseClient.removeChannel(adminChannel);
       }
     });
 
@@ -776,6 +836,143 @@
         }, 200);
       });
     });
+
+    // ==== لوحة إدارة المحادثات (تظهر بس للمدير) ====
+    const adminPanelOverlay = document.getElementById('adminPanelOverlay');
+    const closeAdminPanel = document.getElementById('closeAdminPanel');
+    const adminThreadsList = document.getElementById('adminThreadsList');
+    const adminThreadView = document.getElementById('adminThreadView');
+    let adminChannel = null;
+    let activeThreadUserId = null;
+
+    openAdminPanelBtn.addEventListener('click', () => {
+      adminPanelOverlay.classList.add('open');
+      loadAdminThreads();
+      subscribeAdminToAllMessages();
+    });
+
+    closeAdminPanel.addEventListener('click', () => {
+      adminPanelOverlay.classList.remove('open');
+    });
+
+    adminPanelOverlay.addEventListener('click', (e) => {
+      if (e.target === adminPanelOverlay) adminPanelOverlay.classList.remove('open');
+    });
+
+    async function loadAdminThreads() {
+      const { data, error } = await supabaseClient
+        .from('messages')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error || !data) return;
+
+      // نجمع الرسائل حسب صاحب المحادثة (user_id)، وناخذ آخر رسالة بس لكل واحد
+      const threadsMap = {};
+      data.forEach(msg => {
+        if (!threadsMap[msg.user_id]) {
+          threadsMap[msg.user_id] = msg;
+        }
+      });
+
+      const threads = Object.values(threadsMap);
+
+      if (threads.length === 0) {
+        adminThreadsList.innerHTML = '<p class="admin-empty-hint">ولا محادثة لسا.</p>';
+        return;
+      }
+
+      adminThreadsList.innerHTML = threads.map(t => `
+        <div class="admin-thread-item" data-user-id="${t.user_id}">
+          <span class="admin-thread-id">زبون #${t.user_id.slice(0, 8)}</span>
+          <span class="admin-thread-preview">${t.message_text}</span>
+        </div>
+      `).join('');
+
+      document.querySelectorAll('.admin-thread-item').forEach(item => {
+        item.addEventListener('click', () => openAdminThread(item.dataset.userId));
+      });
+    }
+
+    async function openAdminThread(userId) {
+      activeThreadUserId = userId;
+      document.querySelectorAll('.admin-thread-item').forEach(el => {
+        el.classList.toggle('active', el.dataset.userId === userId);
+      });
+
+      const { data, error } = await supabaseClient
+        .from('messages')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: true });
+
+      adminThreadView.innerHTML = `
+        <div id="adminThreadMessages" class="chat-messages"></div>
+        <form id="adminReplyForm" class="chat-input-row">
+          <input type="text" id="adminReplyInput" placeholder="اكتبي ردك..." autocomplete="off" required>
+          <button type="submit" class="chat-send-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 12h16M14 6l6 6-6 6" stroke="#fffdf9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </form>
+      `;
+
+      const threadMessages = document.getElementById('adminThreadMessages');
+      if (!error && data) {
+        data.forEach(msg => {
+          const bubble = document.createElement('div');
+          const isBusiness = msg.sender === 'business';
+          bubble.className = 'chat-bubble ' + (isBusiness ? 'chat-bubble-mine' : 'chat-bubble-theirs');
+          bubble.textContent = msg.message_text;
+          threadMessages.appendChild(bubble);
+        });
+        threadMessages.scrollTop = threadMessages.scrollHeight;
+      }
+
+      document.getElementById('adminReplyForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const input = document.getElementById('adminReplyInput');
+        const text = input.value.trim();
+        if (!text) return;
+        input.value = '';
+
+        const bubble = document.createElement('div');
+        bubble.className = 'chat-bubble chat-bubble-mine';
+        bubble.textContent = text;
+        threadMessages.appendChild(bubble);
+        threadMessages.scrollTop = threadMessages.scrollHeight;
+
+        await supabaseClient.from('messages').insert({
+          user_id: activeThreadUserId,
+          sender: 'business',
+          message_text: text
+        });
+      });
+    }
+
+    function subscribeAdminToAllMessages() {
+      if (adminChannel) supabaseClient.removeChannel(adminChannel);
+      adminChannel = supabaseClient
+        .channel('admin-all-messages')
+        .on('postgres_changes', {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'messages'
+        }, (payload) => {
+          loadAdminThreads(); // نحدّث القائمة كل ما توصل رسالة جديدة
+          // لو المحادثة المفتوحة حالياً هي اللي وصلتها رسالة، نضيفها مباشرة
+          if (payload.new.user_id === activeThreadUserId && payload.new.sender === 'customer') {
+            const threadMessages = document.getElementById('adminThreadMessages');
+            if (threadMessages) {
+              const bubble = document.createElement('div');
+              bubble.className = 'chat-bubble chat-bubble-theirs';
+              bubble.textContent = payload.new.message_text;
+              threadMessages.appendChild(bubble);
+              threadMessages.scrollTop = threadMessages.scrollHeight;
+            }
+          }
+        })
+        .subscribe();
+    }
 
     const revealElements = document.querySelectorAll('.reveal');
     const observer = new IntersectionObserver((entries) => {

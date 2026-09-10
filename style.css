@@ -1069,3 +1069,134 @@ h1, h2 {
     width: auto;
   }
 }
+
+/* مفتاح اختيار الدور بنافذة تسجيل الدخول */
+.role-toggle {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.role-btn {
+  flex: 1;
+  padding: 9px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--clay);
+  border-radius: 20px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.role-btn.active {
+  background: var(--amber);
+  color: var(--paper);
+  border-color: var(--amber);
+}
+
+/* لوحة إدارة المحادثات */
+.admin-panel {
+  position: relative;
+  background: var(--paper);
+  border-radius: 12px;
+  width: 90%;
+  max-width: 780px;
+  height: 75vh;
+  max-height: 560px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.35);
+  animation: modalPop 0.3s ease;
+  overflow: hidden;
+}
+
+.admin-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 22px;
+  background: var(--espresso);
+  color: var(--cream);
+}
+
+.admin-panel-header h3 {
+  font-family: var(--font-display);
+  font-size: 17px;
+}
+
+.admin-panel-header .modal-close {
+  color: var(--cream);
+  position: static;
+}
+
+.admin-panel-body {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.admin-threads-list {
+  width: 240px;
+  border-left: 1px solid var(--line);
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+.admin-thread-item {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.admin-thread-item:hover, .admin-thread-item.active {
+  background: var(--cream);
+}
+
+.admin-thread-id {
+  font-family: var(--font-display);
+  font-size: 13px;
+  color: var(--amber);
+}
+
+.admin-thread-preview {
+  font-size: 13px;
+  color: var(--clay);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.admin-thread-view {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-thread-view #adminThreadMessages {
+  width: 100%;
+}
+
+.admin-empty-hint {
+  color: var(--clay);
+  font-size: 14px;
+  padding: 20px;
+}
+
+@media (max-width: 600px) {
+  .admin-panel-body {
+    flex-direction: column;
+  }
+  .admin-threads-list {
+    width: 100%;
+    max-height: 140px;
+    border-left: none;
+    border-bottom: 1px solid var(--line);
+  }
+}
